@@ -1,31 +1,9 @@
-/*
 import java.util.*;
 
-public class Methodes {
-    */
-/*De volgende 16 methodes zijn aanvallen*//*
-
-
-
-
-
-
-
-
-    */
-/*deze methode komt op meerdere plaatsen terug*//*
-
-    List<String> getAttacks() {
-        return attacks;
-    }
-
-    public List<Pokemon> getPokemonList() {
-        return Arrays.asList(getCharizard(), getBlastoise(), getDitto(), getGyarados(), getRaichu(), getVenusaur());
-    }
-
-    */
-/*Deze methodes mogen geïmplementeerd worden in de interface*//*
-
+public class PokemonGymImpl implements PokemonGym{
+    private boolean StillPokemonAlive = true;
+    private int pokemonsLeftTrainer = 6;
+    private int pokemonsLeftOwner = 6;
 
     public void enteredTheGym(PokemonTrainer player1) {
         PokemonGymOwner gymOwner = new PokemonGymOwner("Brock");
@@ -57,7 +35,6 @@ public class Methodes {
             System.out.println(p.getName());
         }
     }
-
     public Pokemon selectPokemon(String pokemon, PokemonTrainer trainer) {
         List<Pokemon> pokemons = trainer.getPokemons();
         int number = 0;
@@ -71,23 +48,43 @@ public class Methodes {
 
     public void fightRound(PokemonTrainer trainer, PokemonGymOwner owner, Pokemon pokemon, Pokemon gymPokemon) {
         Scanner speler_A = new Scanner(System.in);
-        while (pokemon.getHp() > 0 && gymPokemon.getHp() > 0) {
+
+        while (StillPokemonAlive) {
 
             System.out.println("It's " + owner.getName() + "'s turn to attack");
             gymOwnerAttacks(gymPokemon, pokemon);
-            System.out.println("It's " + trainer.getName() + "'s turn to attack");
-            attackOrChange(pokemon, gymPokemon, trainer, owner);
+            if(pokemon.getHp() <= 0) {
+                System.out.println(gymPokemon.getName() + " has defeated " + pokemon.getName());
+                pokemonsLeftTrainer--;
+                if (pokemonsLeftTrainer == 0){
+                    StillPokemonAlive = false;
+                    System.out.println(trainer.getName()+ " has lost");
+                    break;
+                }else{ pokemon = choosePokemon(trainer);}
 
-        }
-        if(pokemon.getHp() <= 0){
-            System.out.println(gymPokemon.getName() + " has defeated " + pokemon.getName());
-        } else if (gymPokemon.getHp() <= 0){
-            System.out.println(pokemon.getName() + " has defeated " + gymPokemon.getName());
+            }else{
+                System.out.println("It's " + trainer.getName() + "'s turn to attack");
+                attackOrChange(pokemon, gymPokemon, trainer, owner);
+            }
+
+            if (gymPokemon.getHp() <= 0){
+                System.out.println(pokemon.getName() + " has defeated " + gymPokemon.getName());
+                pokemonsLeftOwner--;
+                if (pokemonsLeftOwner == 0){
+                    System.out.println(owner.getName()+ " has lost");
+                    StillPokemonAlive = false;
+                }else{gymPokemon = chooseGymPokemon(owner);
+                    System.out.println(owner.getName()+" " +"is playing his next pokemon "+ gymPokemon.getName());
+                }
+            }
         }
 
         System.out.println("Would you like to keep playing? yes or no");
         String keepPlaying = speler_A.nextLine();
         if (keepPlaying.equals("yes")){
+            StillPokemonAlive = true;
+            pokemonsLeftTrainer = 6;
+            pokemonsLeftOwner = 6;
             enteredTheGym(trainer);
         } else {
             System.out.println("Thank you for playing");
@@ -129,7 +126,7 @@ public class Methodes {
         return rand.nextInt(maxAttacks);
     }
 
-    public String chooseAttackPlayer(Pokemon p){
+   public String chooseAttackPlayer(Pokemon p){
         Scanner speler_A = new Scanner(System.in);
         String type = p.getType();
         switch (type) {
@@ -261,19 +258,27 @@ public class Methodes {
     public void attackOrChange(Pokemon pokemon, Pokemon gymPokemon, PokemonTrainer trainer, PokemonGymOwner gym){
         Scanner speler_A = new Scanner(System.in);
 
-        System.out.println("Do you want to attack or change your pokemon?");
-        System.out.println("Type a for attack or c for change");
+        System.out.println("Do you want to attack, feed or change your pokemon?");
+        System.out.println("Type a for attack, f for feed or c for change");
         String choice = speler_A.nextLine();
 
         if (choice.equalsIgnoreCase("a")) {
             String attack = chooseAttackPlayer(pokemon);
             performAttackPlayer(pokemon, gymPokemon, attack);
-        } else {
+        } else if(choice.equalsIgnoreCase("c")){
             pokemon = choosePokemon(trainer);
             attackOrChange(pokemon, gymPokemon, trainer, gym);
             fightRound(trainer, gym, pokemon, gymPokemon);
+        }else{
+            feedpokemon(pokemon);
         }
     }
 
+    private void feedpokemon(Pokemon pokemon) {
+        pokemon.setHp(pokemon.getHp()+20);
+        System.out.println("you have fed "+ pokemon.getName()+" by trowing " + pokemon.getFood()+ " at him. " );
+        System.out.println(pokemon.getName()+ " has a increased hp and now has "+ pokemon.getHp()+ " health points");
+    }
 }
-*/
+
+
