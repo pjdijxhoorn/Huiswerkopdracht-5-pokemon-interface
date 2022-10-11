@@ -43,12 +43,7 @@ public class GrassPokemon extends Pokemon{
                 damage = damage;
             }
         }
-        System.out.println(enemy.getName() +" loses "+ damage + " HP");
-        int newHP = enemy.getHp()-damage;
-        enemy.setHp(newHP);
-        System.out.println(enemy.getName()+ " has " +enemy.getHp() +" HP left");
-        if (enemy.getHp()<0)
-            System.out.println(enemy.getName()+ " has fainted");
+        Pokemon.printDamageCalculator(name, damage, enemy);
     }
     public void leafStorm(Pokemon name, Pokemon enemy){
         System.out.println(name.getName() + " attacks " + enemy.getName() + " with leafstorm");

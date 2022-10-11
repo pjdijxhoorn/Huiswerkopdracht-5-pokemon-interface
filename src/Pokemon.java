@@ -78,7 +78,14 @@ public abstract class Pokemon {
 
     // methods ----------------------------------------------------------------------------------
 
-
+    public static void printDamageCalculator(Pokemon name, int damage, Pokemon enemy) {
+        System.out.println(name.getName() +" deals "+ damage + " HP");
+        int newHP = enemy.getHp()-damage;
+        enemy.setHp(newHP);
+        System.out.println(enemy.getName()+ " has " +enemy.getHp() +" HP left");
+        if (enemy.getHp()<0)
+            System.out.println(enemy.getName()+ " has fainted");
+    }
 
 
 }
